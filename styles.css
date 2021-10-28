@@ -4,6 +4,22 @@ body{
   font-family: 'Cinzel', serif;
 }
 
+.fadein{
+  -webkit-animation: fadein 5s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadein 5s; /* Firefox < 16 */
+  -ms-animation: fadein 5s; /* Internet Explorer */
+  -o-animation: fadein 5s; /* Opera < 12.1 */
+  animation: fadein 5s;
+}
+
+.fadeout{
+  -webkit-animation: fadeout 3s forwards; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadeout 3s forwards; /* Firefox < 16 */
+  -ms-animation: fadeout 3s forwards; /* Internet Explorer */
+  -o-animation: fadeout 3s forwards; /* Opera < 12.1 */
+  animation: fadeout 3s forwards;
+}
+
 #title{
   position: absolute;
   width: 100%;
@@ -11,11 +27,6 @@ body{
   margin-top: 5%;
   z-index: 1;
   font-size: 5rem;
-  -webkit-animation: fadein 5s; /* Safari, Chrome and Opera > 12.1 */
-  -moz-animation: fadein 5s; /* Firefox < 16 */
-  -ms-animation: fadein 5s; /* Internet Explorer */
-  -o-animation: fadein 5s; /* Opera < 12.1 */
-  animation: fadein 5s;
 }
 
 @keyframes fadein {
@@ -45,4 +56,33 @@ body{
 @-o-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
+}
+
+@keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
 }
