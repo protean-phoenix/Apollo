@@ -34,6 +34,10 @@ window.onload = () => {
   }
 
   function resizeHandler(){
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize( w, h );
   }
 }
