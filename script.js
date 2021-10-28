@@ -3,13 +3,21 @@ window.onload = () => {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer();
 
-  const torusGeometry = new THREE.TorusGeometry(1, .2, 8, 6);
+  const torusSaturnGeometry = new THREE.TorusGeometry(1, .2, 8, 6);
   const materialSaturn = new THREE.MeshLambertMaterial({color: 0xffffff})
-  const torus = new THREE.Mesh(torusGeometry, materialSaturn);
-  const boxSaturn = new THREE.BoundingBoxHelper(torus, 0xffffff);
+  const torusSaturn = new THREE.Mesh(torusSaturnGeometry, materialSaturn);
+  const boxSaturn = new THREE.BoxHelper(torusSaturn, 0xffffff);
 
-  const sphereGeometry = new THREE.SphereGeometry(.2, 32, 16)
-  const sphere = new THREE.Mesh(sphereGeometry, materialSaturn);
+  const sphereSaturnGeometry = new THREE.SphereGeometry(.2, 8, 4)
+  const sphereSaturn = new THREE.Mesh(sphereSaturnGeometry, materialSaturn);
+
+  const torusSolarGeometry = new THREE.TorusGeometry(1, .2, 32, 24);
+  const materialSolar = new THREE.MeshLambertMaterial({color: 0xffffff})
+  const torusSolar = new THREE.Mesh(torusSolarGeometry, materialSolar);
+
+
+  const sphereSolarGeometry = new THREE.SphereGeometry(.2, 32, 16)
+  const sphereSolar = new THREE.Mesh(sphereSolarGeometry, materialSolar);
 
   const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
 
@@ -23,15 +31,25 @@ window.onload = () => {
   let zoomingOutX = 0;
   let zoomingOutCompleted = false;
 
-  scene.add(torus);
-  scene.add(sphere);
+  scene.add(torusSaturn);
+  scene.add(sphereSaturn);
   scene.add(boxSaturn);
+  scene.add(torusSolar);
+  scene.add(sphereSolar);
   scene.add(directionalLight);
 
   boxSaturn.material.visible = false;
 
   camera.position.z = 5;
   directionalLight.position.set(0,0,1);
+  torusSolar.position.set(-6,6,0);
+  sphereSolar.position.set(-6,6,0);
+
+  const boxSolar = new THREE.BoxHelper(torusSolar, 0xffffff);
+
+  scene.add(boxSolar);
+
+  boxSolar.material.visible = false;
 
   renderer.setSize(window.innerWidth, window.innerHeight);
   window.addEventListener('resize', resizeHandler);
@@ -48,8 +66,9 @@ window.onload = () => {
 
     objectHover();
 
-    torus.rotation.y += 0.01;
-    torus.rotation.z += 0.01;
+    torusSaturn.rotation.y += 0.01;
+    torusSaturn.rotation.z += 0.01;
+    torusSolar.rotation.x += 0.001;
 
     if(zoomingOut){
       zoomOut();
@@ -64,7 +83,7 @@ window.onload = () => {
   }
 
   function clickHandler() {
-    if(hoverObjs.includes(sphere) && !zoomingOutCompleted){
+    if(hoverObjs.includes(sphereSaturn) && !zoomingOutCompleted){
       zoomingOut = true;
       zoomingOutZ = 1;
       zoomingOutY = 1;
@@ -94,10 +113,16 @@ window.onload = () => {
      for(let i = 0; i < intersects.length; i++){
        if(!hoverObjs.includes(intersects[i])){
          if(intersects[i].object == boxSaturn){
-           torus.material.color.set(0x7851A9)
-           sphere.material.color.set(0x7851A9)
-           hoverObjs.push(torus);
-           hoverObjs.push(sphere);
+           torusSaturn.material.color.set(0x7851A9)
+           sphereSaturn.material.color.set(0x7851A9)
+           hoverObjs.push(torusSaturn);
+           hoverObjs.push(sphereSaturn);
+         }
+         else if(intersects[i].object == boxSolar){
+           torusSolar.material.color.set(0xCC5500)
+           sphereSolar.material.color.set(0xCC5500)
+           hoverObjs.push(torusSolar);
+           hoverObjs.push(sphereSolar);
          }
        }
      }
