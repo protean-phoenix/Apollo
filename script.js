@@ -3,20 +3,23 @@ window.onload = () => {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer();
 
-  const torusSaturnGeometry = new THREE.TorusGeometry(1, .2, 8, 6);
-  const materialSaturn = new THREE.MeshLambertMaterial({color: 0xffffff})
-  const torusSaturn = new THREE.Mesh(torusSaturnGeometry, materialSaturn);
-  const boxSaturn = new THREE.BoxHelper(torusSaturn, 0xffffff);
+  const torusOrbitGeometry = new THREE.TorusGeometry(8.5, .03, 32, 48);
+  const materialOrbit = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: 0});
+  const torusOrbit = new THREE.Mesh(torusOrbitGeometry, materialOrbit);
 
-  const sphereSaturnGeometry = new THREE.SphereGeometry(.2, 8, 4)
+  const torusSaturnGeometry = new THREE.TorusGeometry(1, .2, 8, 6);
+  const materialSaturn = new THREE.MeshLambertMaterial({color: 0xffffff});
+  const torusSaturn = new THREE.Mesh(torusSaturnGeometry, materialSaturn);
+
+  const sphereSaturnGeometry = new THREE.SphereGeometry(.2, 8, 4);
   const sphereSaturn = new THREE.Mesh(sphereSaturnGeometry, materialSaturn);
 
   const torusSolarGeometry = new THREE.TorusGeometry(1, .2, 32, 24);
-  const materialSolar = new THREE.MeshLambertMaterial({color: 0xffffff})
+  const materialSolar = new THREE.MeshLambertMaterial({color: 0xffffff});
   const torusSolar = new THREE.Mesh(torusSolarGeometry, materialSolar);
 
 
-  const sphereSolarGeometry = new THREE.SphereGeometry(.2, 32, 16)
+  const sphereSolarGeometry = new THREE.SphereGeometry(.2, 32, 16);
   const sphereSolar = new THREE.Mesh(sphereSolarGeometry, materialSolar);
 
   const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
@@ -31,19 +34,25 @@ window.onload = () => {
   let zoomingOutX = 0;
   let zoomingOutCompleted = false;
 
-  scene.add(torusSaturn);
-  scene.add(sphereSaturn);
-  scene.add(boxSaturn);
+  scene.add(torusOrbit);
   scene.add(torusSolar);
   scene.add(sphereSolar);
+  sphereSolar.add(torusSaturn);
+  sphereSolar.add(sphereSaturn);
   scene.add(directionalLight);
-
-  boxSaturn.material.visible = false;
 
   camera.position.z = 5;
   directionalLight.position.set(0,0,1);
+  torusOrbit.position.set(-6,6,0);
   torusSolar.position.set(-6,6,0);
   sphereSolar.position.set(-6,6,0);
+  torusSaturn.position.set(6,-6,0);
+  sphereSaturn.position.set(6,-6,0);
+
+  const boxSaturn = new THREE.BoxHelper(torusSaturn, 0xffffff);
+
+  sphereSolar.add(boxSaturn);
+  boxSaturn.material.visible = false;
 
   const boxSolar = new THREE.BoxHelper(torusSolar, 0xffffff);
 
@@ -69,9 +78,13 @@ window.onload = () => {
     torusSaturn.rotation.y += 0.01;
     torusSaturn.rotation.z += 0.01;
     torusSolar.rotation.x += 0.001;
+    if(zoomingOut || zoomingOutCompleted){
+      sphereSolar.rotation.z += 0.001;
+    }
 
     if(zoomingOut){
       zoomOut();
+      torusOrbit.material.opacity += .003;
     }
 
     renderer.render(scene, camera);
@@ -88,12 +101,13 @@ window.onload = () => {
       zoomingOutZ = 1;
       zoomingOutY = 1;
       zoomingOutX = 1;
-      fadeout(document.getElementById("title"));
+      fadeout(document.getElementById("apollo"));
     }
   }
 
   function fadein(element){
     element.classList.remove("fadeout");
+    element.classList.remove("invisible");
     element.classList.add("fadein");
   }
 
@@ -107,32 +121,62 @@ window.onload = () => {
 	  raycaster.setFromCamera( mouse, camera );
 
 	 // calculate objects intersecting the picking ray
-	 const intersects = raycaster.intersectObjects( scene.children );
+	 const intersectSolar = raycaster.intersectObjects( scene.children );
+   const intersectPlanets = raycaster.intersectObjects( sphereSolar.children );
 
-   if(intersects.length > 0){
-     for(let i = 0; i < intersects.length; i++){
-       if(!hoverObjs.includes(intersects[i])){
-         if(intersects[i].object == boxSaturn){
-           torusSaturn.material.color.set(0x7851A9)
-           sphereSaturn.material.color.set(0x7851A9)
+   if(intersectSolar.length > 0 || intersectPlanets.length > 0){
+     for(let i = 0; i < intersectPlanets.length; i++){
+       if(!hoverObjs.includes(intersectPlanets[i])){
+         if(intersectPlanets[i].object == boxSaturn){
+           if(zoomingOutCompleted){
+             quickFadein(document.getElementById('saturn'));
+           }
+           torusSaturn.material.color.set(0x7851A9);
+           sphereSaturn.material.color.set(0x7851A9);
            hoverObjs.push(torusSaturn);
            hoverObjs.push(sphereSaturn);
+           hoverObjs.push(boxSaturn);
          }
-         else if(intersects[i].object == boxSolar){
-           torusSolar.material.color.set(0xCC5500)
-           sphereSolar.material.color.set(0xCC5500)
+     }
+   }
+     for(let i = 0; i < intersectSolar.length; i++){
+       if(!hoverObjs.includes(intersectSolar[i])){
+         if(intersectSolar[i].object == boxSolar){
+           if(zoomingOutCompleted){
+             quickFadein(document.getElementById('sol'));
+           }
+           torusSolar.material.color.set(0xCC5500);
+           sphereSolar.material.color.set(0xCC5500);
            hoverObjs.push(torusSolar);
            hoverObjs.push(sphereSolar);
+           hoverObjs.push(boxSolar);
          }
        }
      }
    }
-   else if(hoverObjs.length > 0 && intersects.length === 0){
+   else if(hoverObjs.length > 0 && intersectSolar.length === 0 && intersectPlanets.length === 0){
      for(let i = 0; i < hoverObjs.length; i++){
+       if(hoverObjs[i] == boxSolar && zoomingOutCompleted){
+         quickFadeout(document.getElementById('sol'));
+       }
+       if(hoverObjs[i] == boxSaturn && zoomingOutCompleted){
+         quickFadeout(document.getElementById('saturn'));
+       }
        hoverObjs[i].material.color.set(0xffffff);
      }
      hoverObjs = [];
    }
+  }
+
+  function quickFadein(element){
+    element.classList.remove("quickfadeout");
+    element.classList.remove("invisible");
+    element.classList.add("quickfadein");
+  }
+
+  function quickFadeout(element){
+    element.classList.remove("quickfadein");
+    element.classList.add("quickfadeout");
   }
 
   function resizeHandler(){
