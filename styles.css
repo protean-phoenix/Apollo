@@ -40,11 +40,38 @@ body{
   animation: fadeout 1s forwards;
 }
 
+.subtitle-1{
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin-top: 15%;
+  z-index: 1;
+  font-size: 4rem;
+}
+
+.subtitle-2{
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin-top: 30%;
+  z-index: 1;
+  font-size: 4rem;
+}
+
+.text{
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin-top: 55%;
+  z-index: 1;
+  font-size: 2rem;
+}
+
 .title{
   position: absolute;
   width: 100%;
   text-align: center;
-  margin-top: 5%;
+  margin-top: 3%;
   z-index: 1;
   font-size: 5rem;
 }
