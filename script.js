@@ -203,6 +203,7 @@ window.onload = () => {
     }
     else if(hoverObjs.includes(boxSaturn) && zoomingOutCompleted && toWhite){
       toWhite = false;
+      clearInterval(intervalID);
       quickFadeout(document.getElementById("system"));
       clearScreen();
       mode = 'system';
@@ -218,6 +219,7 @@ window.onload = () => {
     }
     else if(hoverObjs.includes(boxSolar) && zoomingOutCompleted && toWhite){
       toWhite = false;
+      clearInterval(intervalID);
       quickFadeout(document.getElementById("system"));
       clearScreen();
       mode = 'system';

@@ -44,7 +44,7 @@ body{
   position: absolute;
   width: 100%;
   text-align: center;
-  margin-top: 15%;
+  margin-top: 165px;
   z-index: 1;
   font-size: 4rem;
 }
@@ -53,7 +53,7 @@ body{
   position: absolute;
   width: 100%;
   text-align: center;
-  margin-top: 30%;
+  margin-top: 260px;
   z-index: 1;
   font-size: 4rem;
 }
@@ -62,7 +62,7 @@ body{
   position: absolute;
   width: 100%;
   text-align: center;
-  margin-top: 55%;
+  margin-top: 515px;
   z-index: 1;
   font-size: 2rem;
 }
@@ -71,7 +71,7 @@ body{
   position: absolute;
   width: 100%;
   text-align: center;
-  margin-top: 3%;
+  margin-top: 10px;
   z-index: 1;
   font-size: 5rem;
 }
