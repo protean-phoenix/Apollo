@@ -1,5 +1,5 @@
 window.onload = () => {
-  const screenItems = ['archives','message','poem','text'];
+  const screenItems = ['archives','message','poem', 'poem-2','text', 'text-2'];
 
   let mode = 'system';
   let isPoem1 = true;
@@ -8,6 +8,7 @@ window.onload = () => {
   let poemIndex = 0;
   let textIndex = 0;
   let poems = [];
+  let intervalID = null;
 
   const gradient = [0x000000, 0x111111, 0x222222, 0x333333, 0x444444, 0x555555, 0x666666, 0x777777, 0x888888, 0x999999, 0xaaaaaa, 0xbbbbbb, 0xcccccc, 0xdddddd, 0xeeeeee, 0xffffff];
   let gradientIndex= 0;
@@ -189,16 +190,16 @@ window.onload = () => {
       toWhite = true;
       quickFadeout(document.getElementById("saturn"));
       quickFadein(document.getElementById("message"));
-      poems = archives
-      startingPoem(poems[0]);
+      poems = message;
+      startingPoem(poems[0], true);
       mode = 'message';
     }
     else if(hoverObjs.includes(boxSaturn) && hoverObjs.includes(boxForward) && toWhite){
-      nextText();
+      nextText(true);
     }
 
     else if(hoverObjs.includes(boxSaturn) && hoverObjs.includes(boxBackward) && toWhite){
-      previousText();
+      previousText(true);
     }
     else if(hoverObjs.includes(boxSaturn) && zoomingOutCompleted && toWhite){
       toWhite = false;
@@ -212,7 +213,7 @@ window.onload = () => {
       quickFadeout(document.getElementById("sol"));
       quickFadein(document.getElementById("archives"));
       poems = archives
-      startingPoem(poems[0]);
+      startingPoem(poems[0],false);
       mode = 'archives';
     }
     else if(hoverObjs.includes(boxSolar) && zoomingOutCompleted && toWhite){
@@ -223,16 +224,16 @@ window.onload = () => {
     }
 
     if(hoverObjs.includes(boxForward)){
-      nextText();
+      nextText(true);
     }
     if(hoverObjs.includes(boxDoubleForward)){
-      nextPoem();
+      nextPoem(true);
     }
     if(hoverObjs.includes(boxBackward)){
-      previousText();
+      previousText(true);
     }
     if(hoverObjs.includes(boxDoubleBackward)){
-      previousPoem();
+      previousPoem(true);
     }
   }
 
@@ -263,6 +264,10 @@ window.onload = () => {
     element.classList.add("fadeout");
   }
 
+  function intervalFunc(){
+    nextPoem(false);
+  }
+
   function makeBackgroundWhite(toWhite){
     if(toWhite){
       document.body.style.color = 'black';
@@ -291,13 +296,19 @@ window.onload = () => {
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   }
 
-  function nextPoem(){
+  function nextPoem(endInterval){
+    if(endInterval){
+      clearInterval(intervalID);
+    }
     poemIndex++;
     poemIndex = poemIndex%poems.length;
     switchPoem(poems[poemIndex]);
   }
 
-  function nextText(){
+  function nextText(endInterval){
+    if(endInterval){
+      clearInterval(intervalID);
+    }
     textIndex++;
     textIndex = textIndex%texts.length;
     switchText(texts[textIndex]);
@@ -409,13 +420,19 @@ window.onload = () => {
    }
   }
 
-  function previousPoem(){
+  function previousPoem(endInterval){
+    if(endInterval){
+      clearInterval(intervalID);
+    }
     poemIndex--;
     poemIndex = poemIndex == -1?poems.length - 1:poemIndex;
     switchPoem(poems[poemIndex]);
   }
 
-  function previousText(){
+  function previousText(endInterval){
+    if(endInterval){
+      clearInterval(intervalID);
+    }
     textIndex--;
     textIndex = textIndex == -1?texts.length - 1:textIndex;
     switchText(texts[textIndex]);
@@ -440,7 +457,7 @@ window.onload = () => {
     renderer.setSize( w, h );
   }
 
-  function startingPoem(poem){
+  function startingPoem(poem, isDynamic){
     const activePoemElement = document.getElementById('poem');
     const activeTextElement = document.getElementById('text');
     texts = poem.text;
@@ -449,6 +466,9 @@ window.onload = () => {
     activeTextElement.innerHTML = texts[textIndex];
     quickFadein(activePoemElement);
     quickFadein(activeTextElement);
+    if(isDynamic){
+      intervalID = setInterval(intervalFunc, 5000);
+    }
   }
 
   function switchPoem(poem){
