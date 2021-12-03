@@ -158,6 +158,11 @@ window.onload = () => {
 
     makeBackgroundWhite(toWhite);
 
+    if(zoomingOutCompleted){
+      fadeModel(sphereSaturn, !toWhite, .3);
+      fadeModel(torusOrbit, !toWhite, .3);
+    }
+
     if(backgroundChanging){
       renderer.setClearColor(gradient[gradientIndex]);
       darkenMeshes(toWhite);
@@ -184,6 +189,7 @@ window.onload = () => {
       zoomingOutY = 1;
       zoomingOutX = 1;
       fadeout(document.getElementById("apollo"));
+      sphereSaturn.material.transparent = true;
     }
 
     if(hoverObjs.includes(boxSaturn) && zoomingOutCompleted && !toWhite){
@@ -193,20 +199,6 @@ window.onload = () => {
       poems = message;
       startingPoem(poems[0], true);
       mode = 'message';
-    }
-    else if(hoverObjs.includes(boxSaturn) && hoverObjs.includes(boxForward) && toWhite){
-      nextText(true);
-    }
-
-    else if(hoverObjs.includes(boxSaturn) && hoverObjs.includes(boxBackward) && toWhite){
-      previousText(true);
-    }
-    else if(hoverObjs.includes(boxSaturn) && zoomingOutCompleted && toWhite){
-      toWhite = false;
-      clearInterval(intervalID);
-      quickFadeout(document.getElementById("system"));
-      clearScreen();
-      mode = 'system';
     }
 
     if(hoverObjs.includes(boxSolar) && zoomingOutCompleted && !toWhite){
@@ -333,9 +325,6 @@ window.onload = () => {
            if(zoomingOutCompleted && !toWhite){
              quickFadein(document.getElementById('saturn'));
            }
-           else if(zoomingOutCompleted && toWhite){
-             quickFadein(document.getElementById('system'));
-           }
            torusSaturn.material.color.set(0x7851A9);
            sphereSaturn.material.color.set(0x7851A9);
            hoverObjs.push(torusSaturn);
@@ -451,6 +440,12 @@ window.onload = () => {
     element.classList.add("quickfadeout");
   }
 
+  function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
   function resizeHandler(){
     w = window.innerWidth;
     h = window.innerHeight;
@@ -459,18 +454,29 @@ window.onload = () => {
     renderer.setSize( w, h );
   }
 
+  function showText(texts, div){
+    texts = texts.split('\n');
+    removeAllChildNodes(div);
+    for(let text of texts){
+      let p = document.createElement('p');
+      p.innerHTML = text;
+      div.append(p);
+    }
+  }
+
   function startingPoem(poem, isDynamic){
     const activePoemElement = document.getElementById('poem');
     const activeTextElement = document.getElementById('text');
     texts = poem.text;
     textIndex = 0;
     activePoemElement.innerHTML = poem.title;
-    activeTextElement.innerHTML = texts[textIndex];
-    quickFadein(activePoemElement);
-    quickFadein(activeTextElement);
     if(isDynamic){
+      setTimeout(intervalFunc, 1500);
       intervalID = setInterval(intervalFunc, 5000);
     }
+    showText(texts[textIndex], activeTextElement);
+    quickFadein(activePoemElement);
+    quickFadein(activeTextElement);
   }
 
   function switchPoem(poem){
@@ -493,7 +499,7 @@ window.onload = () => {
     isText1 = isText1?false:true;
     const activeTextElement = document.getElementById(activeTextId);
     const hiddenTextElement = document.getElementById(hiddenTextId);
-    activeTextElement.innerHTML = text;
+    showText(text, activeTextElement);
     quickFadeout(hiddenTextElement);
     quickFadein(activeTextElement);
   }
