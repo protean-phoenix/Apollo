@@ -1,1 +1,1 @@
-const message = [archives[0], archives[1]];
+const message = [archives[2], archives[3], archives[4]];
