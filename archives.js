@@ -11,5 +11,11 @@ const archives = [{'title':'Madonna', 'text':['embodiement of conquest\nlike com
   {'title':'About Art and Artists', 'text':
   ['I thought it was all about\nputting yourself in their work.\nI thought you were supposed to assume\nthinking they wanted many different opinions']},
   {'title':'Being Only Human', 'text':
-  ['I was wrong about a lot of things.']}
+  ['I was wrong about a lot of things.']},
+  {'title':'Constant', 'text':
+  ['I dreamt of you while I lay in bed last night\nIt was not the first, for sure the best, downright\nRelaxing in the water, tub full about halfway\nwith bubbles all around, clear and tinted gray',
+  'Then, to my suprise, someone came inside with me\nThey played footsie after they had took their seat\nI turned and saw your face, before the scene was done\nWhen I have my dreams do you appear there "just for me"?',
+  'Sitting at school, waiting till three\nThe bell rings and your still there next to me\nWalking down the hall and stumbling on my words\nI ask your age and grade and got something absurd',
+  '29 in 9th is exactly what I heard\nBut in dreams nothing ever seems too weird or strange\nI asked about plans for summer, trying to arrange\nYou just smiled at me and ran off a ways',
+  'why can\'t every night make me feel so gay?']}
 ];
